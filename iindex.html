@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-App</title>
+    <style>
+        /* container to center the map */
+        #container{
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #map{
+            height: 80vh;
+            width: 80vw;
+        }
+        html, body{
+            margin: 0;
+            padding: 0%;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id ="container">
+    <div id ="map"></div>
+</div>
+<script>
+    function initMap(){
+       
+        let mapOptions = {
+            center: new google.maps.LatLng('19.0665548809', '98.9690040236'),
+            zoom: 12,
+   
+        }
+        let map = new google.maps.Map(document.getElementById('map'),mapOptions);
+        let marker = new google.maps.Marker({
+            position: { lat: 19.066554809, lng: 98.96900400236 },
+            map: map
+        })
+
+        const infoWindowOptions = {
+            maxWidth: 200,
+            position: { lat: 19.0665548809, lng: 98.9690040236}
+        }
+        const infoWindow = new google.maps.InfoWindow(infoWindowOptions)
+
+        infoWindow.setContent('<h1> Chaing Mai</h1> <img src="./Chiang-mai.jpg" width = "180" height= "80"><p>Nestled in the lush mountains of northern Thailand, this is a captivating city that seamlessly blends ancient traditions with modern charm. Known for its vibrant cultural heritage, Chiang Mai offers a treasure trove of awe-inspiring temples, bustling markets, and mouthwatering street food.</p>');
+       
+        const infowindowOptions = {
+            map: map
+        }
+        const infoWindowOpenOptions = {
+            map: map,
+            anchor:marker,
+            shouldFocus: false
+        }
+       
+        infoWindow.open(infoWindowOpenOptions);
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcgf6khpnR1PX4KU01JUiR6qQOB3FWvv0&callback=initMap"></script>
+
+</body>
+</html>
