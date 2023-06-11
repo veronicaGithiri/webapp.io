@@ -1,68 +1,266 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web-App</title>
-    <style>
-        /* container to center the map */
-        #container{
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #map{
-            height: 80vh;
-            width: 80vw;
-        }
-        html, body{
+  <title>Chiang Mai Tourisrt Destinations</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+        height: 100vh;
+        width: 100vw;
+    }
+    html, body{
             margin: 0;
             padding: 0%;
         }
-    </style>
+        .navbar {
+        background-color: #333;
+        overflow: hidden;
+    }
+    .navbar a {
+        float: left;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+    .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+    .navbar input[type=text] {
+        float: right;
+        padding: 6px;
+        margin-top: 8px;
+        margin-right: 16px;
+        border: none;
+        font-size: 17px;
+    }
+    .navbar .logo {
+        float: left;
+        font-size: 24px;
+        font-weight: bold;
+        padding: 14px 16px;
+        color: white;
+        text-decoration: none;
+    }
+    .navbar .logo:hover {
+        background-color: #333;
+    }
+    .navbar .active {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .navbar .dropdown {
+        float: left;
+        overflow: hidden;
+    }
+    .navbar .dropdown .dropbtn {
+        font-size: 17px;
+        border: none;
+        outline: none;
+        color: white;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+    }
+    .navbar .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+    .navbar .dropdown-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+    .navbar .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+    .navbar .dropdown:hover .dropdown-content {
+        display: block;
+    }
+   .popup-image {
+       width: 300px;
+      height: 200px;
+      border-radius: 10px;
+      align-items: center;
+        }
+   .custom-popup {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: #F6DDCC;
+    padding: 10px;
+    border-radius: 5px;
+    }
+
+  </style>
 </head>
 <body>
-    
-    <div id ="container">
-    <div id ="map"></div>
-</div>
-<script>
-    function initMap(){
-       
-        let mapOptions = {
-            center: new google.maps.LatLng('19.0665548809', '98.9690040236'),
-            zoom: 12,
-   
-        }
-        let map = new google.maps.Map(document.getElementById('map'),mapOptions);
-        let marker = new google.maps.Marker({
-            position: { lat: 19.066554809, lng: 98.96900400236 },
-            map: map
-        })
+  <div class="navbar">
+    <a class="logo" href="#">Chiang Mai Tourist Attractions</a>
+    <a class="active" href="#">Home</a>
+    <div class="dropdown">
+      <button class="dropbtn">Attractions
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="Chiang Mai Night Bazaar">Chiang Mai Night Bazaar</a>
+        <a href="#">Bangkok</a>
+        <a href="#">Phuket</a>
+      </div>
+    </div>
+    <input type="text" placeholder="Search...">
+  </div>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Initialize the map
+    var map = L.map('map').setView([18.787747, 98.993128], 12);
 
-        const infoWindowOptions = {
-            maxWidth: 200,
-            position: { lat: 19.0665548809, lng: 98.9690040236}
-        }
-        const infoWindow = new google.maps.InfoWindow(infoWindowOptions)
+    // Add the tile layer (map tiles)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-        infoWindow.setContent('<h1> Chaing Mai</h1> <img src="./Chiang-mai.jpg" width = "180" height= "80"><p>Nestled in the lush mountains of northern Thailand, this is a captivating city that seamlessly blends ancient traditions with modern charm. Known for its vibrant cultural heritage, Chiang Mai offers a treasure trove of awe-inspiring temples, bustling markets, and mouthwatering street food.</p>');
-       
-        const infowindowOptions = {
-            map: map
-        }
-        const infoWindowOpenOptions = {
-            map: map,
-            anchor:marker,
-            shouldFocus: false
-        }
-       
-        infoWindow.open(infoWindowOpenOptions);
+    // Define the tourist attractions as an array of objects
+    var attractions = [
+      {
+        name: 'Chiang Mai Night Bazaar',
+        latlng: [18.7883, 98.9858],
+        image:'night-bazaar.jpg',       
+         description: ' "Chiang Mai Night Bazaar is a vibrant and bustling market offering a wide array of products, including handicrafts, clothing, souvenirs, and delicious street food.'
+      },
+      {
+        name: 'Doi Suthep',
+        latlng: [18.8069, 98.9611],
+        image: 'doi-suthep.jpg',
+        description: 'Doi Suthep is a sacred mountain located northwest of Chiang Mai. It is home to Wat Phra That Doi Suthep, a stunning Buddhist temple that offers panoramic views of the city.'
+    },
+    {
+        name: 'Wat Chedi Luang',
+        latlng: [18.7854, 98.9817],
+        image: 'Wat-Chedi-Luang.jpg',
+        description: 'Wat Chedi Luang is a historic temple in the heart of Chiang Mai. It features a towering chedi and is known for its ancient stone carvings and rich history.'
+    },
+    {
+        name: 'Elephant Nature Park',
+        latlng: [19.3637, 98.9245],
+        image: 'Elephant Nature Park.jpg',
+        description: 'Elephant Nature Park is a sanctuary where you can interact with rescued elephants in an ethical and responsible manner. Visitors can learn about elephant conservation and observe these majestic creatures in a natural environment.'
+    },
+      {
+        name: 'Doi Inthanon National Park',
+        latlng: [18.535860145072704, 98.52215608219953],
+        image:'DINP.jpg',
+        description: 'Doi Inthanon National Park is the highest mountain in Thailand. It offers breathtaking natural beauty, including majestic waterfalls, lush forests, and stunning viewpoints. The park is also home to the Royal Agricultural Station Inthanon, a project focused on sustainable agriculture and promoting the well-being of local communities.'
+      },
+      {
+        name: 'Wat Phra Singh',
+        latlng: [18.7879, 98.9863],
+        image: 'Wat-Phra-Singh.jpg',
+        description: 'Wat Phra Singh is a renowned Buddhist temple in Chiang Mai. It houses the Phra Singh Buddha image, one of the most highly revered Buddha statues in Thailand. The temple complex showcases exquisite architecture and intricate details.'
+    },
+    {
+        name: 'Mae Sa Elephant Camp',
+        latlng: [18.8755, 98.9678],
+        image: 'Mae Sa Elephant Camp.jpg',
+        description: 'Mae Sa Elephant Camp is a popular attraction where you can witness incredible elephant shows and even ride an elephant. The camp offers visitors a chance to learn about elephants and their conservation efforts.'
+    },
+    {
+        name: 'Art in Paradise',
+        latlng: [18.8128, 98.9607],
+        image: 'Art in Paradise.jpg',
+        description: 'Art in Paradise is an interactive 3D art museum where visitors can become part of the artwork. It features optical illusions and immersive exhibits that allow you to take fun and creative photos.'
+    },
+    {
+        name: 'Tiger Kingdom',
+        latlng: [18.9001, 98.8897],
+        image: 'Tiger-Kingdom.jpg',
+        description: 'Tiger Kingdom offers a unique opportunity to get up close with tigers. Visitors can have their photos taken with these magnificent animals while learning about tiger conservation efforts.'
+    },
+    {
+        name: 'Mae Kampong Village',
+        latlng: [18.8517, 99.0957],
+        image: 'Mae-Kampong-Village.jpeg',
+        description: 'Mae Kampong Village is a peaceful mountain village known for its traditional way of life and lush green surroundings. Visitors can enjoy the tranquil atmosphere, explore the village, and learn about local customs and traditions.'
+    },
+    {
+        name: 'Sticky Waterfall (Bua Tong)',
+        latlng: [18.9337, 98.9743],
+        image: 'Sticky-Waterfall.jpg',
+        description: 'Sticky Waterfall, also known as Bua Tong Waterfall, is a unique natural attraction where the rocks are naturally grippy, allowing visitors to climb the waterfall without slipping. It is a fun and adventurous experience.'
+    },
+    ];
+    // Add markers for each attraction
+    // Add markers for each attraction using the default marker with modified options
+attractions.forEach(function(attraction) {
+  var marker = L.marker(attraction.latlng, {
+    icon: L.icon({
+      iconUrl: 'icon.png', // URL to the default marker icon
+      iconSize: [30, 36], // Adjust the width and height of the marker icon
+      iconAnchor: [12, 36], // Adjust the anchor point of the marker icon
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png', // URL to the marker shadow image
+      shadowSize: [41, 41], // Adjust the width and height of the marker shadow
+      shadowAnchor: [12, 41] // Adjust the anchor point of the marker shadow
+    }),
+    // Customize the marker options
+    riseOnHover: true, // Raise the marker on hover // Adjust the opacity of the marker (0.0 to 1.0)
+    opacity: 0.8,
+    // Other available options: zIndexOffset, draggable, etc.
+    draggable: true // Allow the marker to be dragged on the map
+  }).addTo(map);
+
+  var popupContent = "<b>" + attraction.name + "</b><br>" + attraction.description + "<br><img class='popup-image' src= '" + attraction.image + "'>";
+  marker.bindPopup(popupContent);
+});
+marker.bindPopup(popupContent, {
+    className: 'custom-popup'
+});
+// Link the dropdown menu items to the attractions on the map
+var dropdownItems = document.querySelectorAll('.dropdown-content a');
+dropdownItems.forEach(function (item) {
+  item.addEventListener('click', function (e) {
+    e.preventDefault();
+    var attractionName = this.getAttribute('href').slice(1); // Remove the '#' symbol from the href
+    var attraction = attractions.find(function (attraction) {
+      return attraction.name === attractionName;
+    });
+    if (attraction) {
+      map.setView(attraction.latlng, 15); // Adjust the zoom level as per your preference
+      var marker = L.marker(attraction.latlng).addTo(map);
+      marker.bindPopup(attraction.name, { className: 'custom-popup' }).openPopup();
     }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcgf6khpnR1PX4KU01JUiR6qQOB3FWvv0&callback=initMap"></script>
+  });
+});
+// Search functionality
+var searchInput = document.querySelector('input[type="text"]');
+searchInput.addEventListener('input', function (e) {
+  var searchQuery = e.target.value.toLowerCase();
+  attractions.forEach(function (attraction) {
+    var attractionName = attraction.name.toLowerCase();
+    var marker = mapMarkers[attractionName];
+    if (attractionName.includes(searchQuery)) {
+      marker.addTo(map);
+    } else {
+      marker.removeFrom(map);
+    }
+  });
+});
 
+// Create a map markers object for easy access
+var mapMarkers = {};
+attractions.forEach(function (attraction) {
+  var marker = L.marker(attraction.latlng);
+  mapMarkers[attraction.name.toLowerCase()] = marker;
+});
+ 
+  </script>
 </body>
 </html>
